@@ -50,13 +50,52 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
   const [isDragging, setIsDragging] = useState(false)
   const [dragStartY, setDragStartY] = useState(0)
   const [autoPlayPaused, setAutoPlayPaused] = useState(false)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
   const autoPlayTimerRef = useRef<number | null>(null)
   const fullscreenTimerRef = useRef<number | null>(null)
   const transitionTimerRef = useRef<number | null>(null)
+  const [windowWidth, setWindowWidth] = useState(1920)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   
-  const splitPosition = useTransform(mouseX, [0, window.innerWidth], [30, 70])
+  const splitPosition = useTransform(mouseX, [0, windowWidth], [30, 70])
+
+  // Preload images on mount
+  useEffect(() => {
+    const preloadImages = async () => {
+      try {
+        const imagePromises = heroImages.map((src) => {
+          return new Promise((resolve, reject) => {
+            const img = new Image()
+            img.onload = () => resolve(src)
+            img.onerror = () => reject(src)
+            img.src = src
+          })
+        })
+        
+        await Promise.all(imagePromises)
+        setImagesLoaded(true)
+      } catch (error) {
+        console.error('Error preloading images:', error)
+        // Still show the hero even if some images fail
+        setImagesLoaded(true)
+      }
+    }
+    
+    preloadImages()
+  }, [])
+
+  // Set window width on mount (client-side only)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth)
+      
+      const handleResize = () => setWindowWidth(window.innerWidth)
+      window.addEventListener('resize', handleResize)
+      
+      return () => window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(false)
@@ -191,6 +230,18 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
     }
   }, [])
 
+  // Show loading state while images are loading
+  if (!imagesLoaded) {
+    return (
+      <section className="relative h-screen w-full bg-gradient-to-br from-gray-900 to-black overflow-hidden mt-[72px] flex items-center justify-center">
+        <div className="text-center text-white">
+          <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-xl font-light tracking-wider">Loading Experience...</p>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section 
       ref={containerRef}
@@ -216,6 +267,10 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
             alt="EV Scooter"
             className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
+            onError={(e) => {
+              console.error('Failed to load image:', heroImages[currentImageIndex])
+              e.currentTarget.style.backgroundColor = '#1f2937'
+            }}
             style={{
               scale: isTransitioning ? 1.2 : 1,
               filter: isTransitioning ? 'grayscale(1) contrast(1.2)' : 'grayscale(0)',
@@ -253,6 +308,10 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
             alt="EV Scooter"
             className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
+            onError={(e) => {
+              console.error('Failed to load image:', heroImages[nextImageIndex])
+              e.currentTarget.style.backgroundColor = '#1f2937'
+            }}
             style={{
               scale: isTransitioning ? 1.2 : 1.1,
               filter: 'grayscale(0.3)',
@@ -367,9 +426,9 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
         />
       </motion.div>
 
-      {/* Glitch Counter */}
+      {/* Image Counter with better visibility */}
       <motion.div 
-        className="absolute top-8 left-8 z-40 font-mono select-none pointer-events-none"
+        className="absolute top-24 left-8 z-40 font-mono select-none pointer-events-none"
         animate={{
           x: isTransitioning ? [-5, 5, -3, 3, 0] : 0,
           y: isTransitioning ? [5, -5, 3, -3, 0] : 0,
@@ -382,30 +441,37 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
             initial={{ opacity: 0, y: 20, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.8 }}
-            className="text-8xl font-black text-white mix-blend-difference"
-            style={{
-              textShadow: isTransitioning 
-                ? '5px 5px 0 #ff00ff, -5px -5px 0 #00ffff' 
-                : '2px 2px 0 rgba(255,255,255,0.1)',
-            }}
+            className="relative"
           >
-            {String(currentImageIndex + 1).padStart(2, '0')}
+            {/* Background blur for readability */}
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm rounded-lg -z-10" />
+            <div className="text-6xl font-black text-white px-4 py-2"
+              style={{
+                textShadow: isTransitioning 
+                  ? '3px 3px 0 #ff00ff, -3px -3px 0 #00ffff' 
+                  : '2px 2px 8px rgba(0,0,0,0.8)',
+              }}
+            >
+              {String(currentImageIndex + 1).padStart(2, '0')}
+            </div>
           </motion.div>
         </AnimatePresence>
         <motion.div 
-          className="text-white/50 text-sm mt-2 flex items-center gap-2"
+          className="text-white text-sm mt-2 flex items-center gap-2 px-4"
           animate={{
             opacity: isTransitioning ? [1, 0.3, 1] : 1,
           }}
         >
-          <span>/ {String(heroImages.length).padStart(2, '0')}</span>
-          <motion.span
-            animate={{ opacity: [0, 1, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="text-xs"
-          >
-            ●
-          </motion.span>
+          <div className="bg-black/30 backdrop-blur-sm rounded px-2 py-1">
+            <span>/ {String(heroImages.length).padStart(2, '0')}</span>
+            <motion.span
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="text-xs ml-2"
+            >
+              ●
+            </motion.span>
+          </div>
         </motion.div>
       </motion.div>
 
