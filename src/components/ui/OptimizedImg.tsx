@@ -1,12 +1,16 @@
 import { ImgHTMLAttributes, useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, HTMLMotionProps } from 'framer-motion'
 
-interface OptimizedImgProps extends ImgHTMLAttributes<HTMLImageElement> {
-  src: string
-  alt: string
-  className?: string
-  priority?: boolean
-}
+type OptimizedImgProps = Omit<
+  ImgHTMLAttributes<HTMLImageElement>,
+  keyof HTMLMotionProps<'img'>
+> &
+  HTMLMotionProps<'img'> & {
+    src: string
+    alt: string
+    className?: string
+    priority?: boolean
+  }
 
 const OptimizedImg = ({ src, alt, className = '', priority = false, ...props }: OptimizedImgProps) => {
   const [isLoaded, setIsLoaded] = useState(false)
