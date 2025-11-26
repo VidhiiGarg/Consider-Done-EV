@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false)
+  const [passedHero, setPassedHero] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const location = useLocation()
@@ -11,6 +12,8 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
+      // Sidebar appears after scrolling past hero section (typically ~600-800px)
+      setPassedHero(window.scrollY > 600)
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -20,7 +23,8 @@ const Header = () => {
   const navLinks = [
     { 
       name: 'Models', 
-      path: '/#models',
+      path: '/',
+      scrollTo: 'products',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -29,7 +33,7 @@ const Header = () => {
     },
     { 
       name: 'Features', 
-      path: '/#features',
+      path: '/features',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
@@ -76,6 +80,17 @@ const Header = () => {
     },
   ]
 
+  const handleNavClick = (link: { path: string; scrollTo?: string }) => {
+    if (link.scrollTo && location.pathname === '/') {
+      // Scroll to section on home page
+      const element = document.getElementById(link.scrollTo)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+    setMobileMenuOpen(false)
+  }
+
   return (
     <>
       {/* Top Navbar - Hidden when scrolled */}
@@ -106,32 +121,12 @@ const Header = () => {
         
         <nav className="container-custom flex items-center justify-between relative py-5">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-3 group relative z-10">
-          <motion.div 
-            className="relative flex items-center justify-center bg-gradient-to-br from-primary to-accent rounded-xl shadow-lg w-14 h-14"
-            whileHover={{ scale: 1.05, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-8 h-8"
-            >
-              <path
-                d="M13 2L3 14H12L11 22L21 10H12L13 2Z"
-                fill="white"
-                strokeWidth="0"
-              />
-            </svg>
-          </motion.div>
-          
+        <Link to="/" className="flex items-center group relative z-10">
           <div className="flex flex-col">
-            <span className="font-display font-black text-xl leading-tight tracking-tight text-gray-900">
+            <span className="font-display font-black text-2xl leading-tight tracking-tight text-gray-900">
               CONSIDER DONE
             </span>
-            <span className="font-display font-bold text-xs leading-tight tracking-widest text-accent">
+            <span className="font-display font-bold text-xs leading-tight tracking-widest text-gray-600">
               EV POWERED
             </span>
           </div>
@@ -140,8 +135,7 @@ const Header = () => {
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center space-x-1">
           {navLinks.map((link, index) => {
-            const isActive = location.pathname === link.path || 
-                           (link.path.includes('#') && location.pathname === '/' && location.hash === link.path.split('#')[1])
+            const isActive = location.pathname === link.path
             
             return (
               <motion.div
@@ -152,6 +146,7 @@ const Header = () => {
               >
                 <Link
                   to={link.path}
+                  onClick={() => handleNavClick(link)}
                   onMouseEnter={() => setHoveredLink(link.name)}
                   onMouseLeave={() => setHoveredLink(null)}
                   className={`relative group px-5 py-2.5 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 flex items-center space-x-2 ${
@@ -189,7 +184,8 @@ const Header = () => {
           className="hidden lg:block"
         >
           <Link
-            to="/#models"
+            to="/"
+            onClick={() => handleNavClick({ path: '/', scrollTo: 'products' })}
             className="px-6 py-2.5 bg-gradient-to-r from-primary to-accent text-white font-semibold text-sm rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300"
           >
             Test Drive
@@ -241,8 +237,7 @@ const Header = () => {
             >
               <div className="container-custom py-6 space-y-1">
                 {navLinks.map((link, index) => {
-                  const isActive = location.pathname === link.path || 
-                                 (link.path.includes('#') && location.pathname === '/' && location.hash === link.path.split('#')[1])
+                  const isActive = location.pathname === link.path
                   
                   return (
                     <motion.div
@@ -253,7 +248,7 @@ const Header = () => {
                     >
                       <Link
                         to={link.path}
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() => handleNavClick(link)}
                         className={`flex items-center space-x-3 text-lg font-semibold py-4 px-5 rounded-xl transition-all duration-300 ${
                           isActive 
                             ? 'text-white bg-gradient-to-r from-primary to-accent shadow-lg shadow-primary/30' 
@@ -286,12 +281,12 @@ const Header = () => {
       </AnimatePresence>
       </motion.header>
 
-      {/* Left Sidebar - Appears when scrolled */}
+      {/* Left Sidebar - Appears when scrolled past hero */}
       <motion.aside
         initial={{ x: -100, opacity: 0 }}
         animate={{ 
-          x: scrolled ? 0 : -100,
-          opacity: scrolled ? 1 : 0
+          x: passedHero ? 0 : -100,
+          opacity: passedHero ? 1 : 0
         }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="fixed left-0 top-0 h-screen z-50 pointer-events-none"
@@ -300,29 +295,20 @@ const Header = () => {
           <motion.div 
             className="bg-white/95 backdrop-blur-2xl shadow-2xl rounded-3xl p-4 border border-gray-100"
             initial={{ scale: 0.9 }}
-            animate={{ scale: scrolled ? 1 : 0.9 }}
+            animate={{ scale: passedHero ? 1 : 0.9 }}
             transition={{ duration: 0.4 }}
           >
             {/* Logo at top */}
             <Link to="/" className="flex items-center justify-center mb-6 group">
               <motion.div 
-                className="relative flex items-center justify-center bg-gradient-to-br from-primary to-accent rounded-xl shadow-md w-12 h-12"
-                whileHover={{ scale: 1.1, rotate: 10 }}
+                className="relative flex items-center justify-center bg-gray-900 rounded-xl shadow-md px-3 py-2"
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6"
-                >
-                  <path
-                    d="M13 2L3 14H12L11 22L21 10H12L13 2Z"
-                    fill="white"
-                    strokeWidth="0"
-                  />
-                </svg>
+                <span className="font-display font-black text-white text-xs tracking-tight">
+                  CD
+                </span>
               </motion.div>
             </Link>
 
@@ -332,16 +318,15 @@ const Header = () => {
             {/* Navigation Icons */}
             <div className="flex flex-col space-y-2">
               {navLinks.map((link, index) => {
-                const isActive = location.pathname === link.path || 
-                               (link.path.includes('#') && location.pathname === '/' && location.hash === link.path.split('#')[1])
+                const isActive = location.pathname === link.path
                 
                 return (
                   <motion.div
                     key={link.name}
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ 
-                      x: scrolled ? 0 : -50,
-                      opacity: scrolled ? 1 : 0
+                      x: passedHero ? 0 : -50,
+                      opacity: passedHero ? 1 : 0
                     }}
                     transition={{ 
                       delay: 0.1 + index * 0.05,
@@ -351,6 +336,7 @@ const Header = () => {
                   >
                     <Link
                       to={link.path}
+                      onClick={() => handleNavClick(link)}
                       onMouseEnter={() => setHoveredLink(link.name)}
                       onMouseLeave={() => setHoveredLink(null)}
                       className={`relative group flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
@@ -406,13 +392,14 @@ const Header = () => {
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ 
-                y: scrolled ? 0 : 20,
-                opacity: scrolled ? 1 : 0
+                y: passedHero ? 0 : 20,
+                opacity: passedHero ? 1 : 0
               }}
               transition={{ delay: 0.4, duration: 0.4 }}
             >
               <Link
-                to="/#models"
+                to="/"
+                onClick={() => handleNavClick({ path: '/', scrollTo: 'products' })}
                 className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-accent text-white rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300"
                 title="Test Drive"
               >

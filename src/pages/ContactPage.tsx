@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
-import BookTestRideModal from '../components/booking/BookTestRideModal'
+import BookTestRideModal from '../components/booking/BookingModal'
 import Button from '../components/ui/Button'
 
 const ContactPage = () => {
@@ -61,10 +61,10 @@ const ContactPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <Header onBookTestRide={() => setIsBookModalOpen(true)} />
+    <div className="min-h-screen bg-white">
+      <Header />
       
-      <main className="pt-24">
+      <main className="pt-24 lg:ml-24">
         {/* Header Section */}
         <section className="section-padding">
           <div className="container-custom text-center">
@@ -73,13 +73,13 @@ const ContactPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="inline-block px-4 py-2 bg-electric-500/10 border border-electric-500/30 rounded-full text-electric-400 text-sm font-medium mb-6">
+              <span className="inline-block px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-primary text-sm font-medium mb-6">
                 Get in Touch
               </span>
-              <h1 className="font-display text-5xl md:text-7xl font-bold mb-6">
+              <h1 className="font-display text-5xl md:text-7xl font-bold text-gray-900 mb-6">
                 We're Here to <span className="gradient-text">Help</span>
               </h1>
-              <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+              <p className="text-gray-600 text-lg max-w-2xl mx-auto">
                 Have questions about our vehicles? Need support? Our team is ready to assist you.
               </p>
             </motion.div>
@@ -97,12 +97,12 @@ const ContactPage = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-2xl p-8 text-center hover:border-electric-500/50 transition-all"
+                className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:border-primary hover:shadow-lg transition-all"
               >
                 <div className="text-6xl mb-4">{method.icon}</div>
-                <h3 className="font-display text-xl font-bold mb-2">{method.title}</h3>
-                <p className="text-slate-400 mb-4">{method.detail}</p>
-                <button className="text-electric-400 font-medium hover:text-electric-300 transition-colors">
+                <h3 className="font-display text-xl font-bold text-gray-900 mb-2">{method.title}</h3>
+                <p className="text-gray-600 mb-4">{method.detail}</p>
+                <button className="text-primary font-medium hover:text-primary/80 transition-colors">
                   {method.action} →
                 </button>
               </motion.div>
@@ -111,19 +111,19 @@ const ContactPage = () => {
         </section>
 
         {/* Contact Form */}
-        <section className="section-padding bg-slate-900">
+        <section className="section-padding bg-gray-50">
           <div className="container-custom">
             <div className="max-w-3xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-3xl p-8 md:p-12"
+                className="bg-white border border-gray-200 rounded-3xl p-8 md:p-12 shadow-lg"
               >
-                <h2 className="font-display text-3xl font-bold mb-2 text-center">
+                <h2 className="font-display text-3xl font-bold text-gray-900 mb-2 text-center">
                   Send Us a Message
                 </h2>
-                <p className="text-slate-400 text-center mb-8">
+                <p className="text-gray-600 text-center mb-8">
                   Fill out the form below and we'll get back to you within 24 hours
                 </p>
 
@@ -131,7 +131,7 @@ const ContactPage = () => {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Full Name *
                         </label>
                         <input
@@ -140,12 +140,12 @@ const ContactPage = () => {
                           value={formData.name}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-electric-500 transition-colors"
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
                           placeholder="John Doe"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Email Address *
                         </label>
                         <input
@@ -154,7 +154,7 @@ const ContactPage = () => {
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-electric-500 transition-colors"
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
                           placeholder="john@example.com"
                         />
                       </div>
@@ -162,7 +162,7 @@ const ContactPage = () => {
 
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Phone Number
                         </label>
                         <input
@@ -170,12 +170,12 @@ const ContactPage = () => {
                           name="phone"
                           value={formData.phone}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-electric-500 transition-colors"
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
                           placeholder="+1 (555) 000-0000"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Subject *
                         </label>
                         <select
@@ -183,7 +183,7 @@ const ContactPage = () => {
                           value={formData.subject}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-electric-500 transition-colors"
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-primary transition-colors"
                         >
                           <option value="general">General Inquiry</option>
                           <option value="sales">Sales</option>
@@ -195,7 +195,7 @@ const ContactPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Message *
                       </label>
                       <textarea
@@ -204,13 +204,13 @@ const ContactPage = () => {
                         onChange={handleChange}
                         required
                         rows={6}
-                        className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-electric-500 transition-colors resize-none"
+                        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors resize-none"
                         placeholder="Tell us how we can help you..."
                       />
                     </div>
 
                     <div className="flex items-center justify-between pt-4">
-                      <p className="text-sm text-slate-500">* Required fields</p>
+                      <p className="text-sm text-gray-500">* Required fields</p>
                       <Button type="submit" size="lg">
                         Send Message
                       </Button>
@@ -226,14 +226,14 @@ const ContactPage = () => {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ delay: 0.2, type: "spring" }}
-                      className="w-20 h-20 bg-electric-500 rounded-full flex items-center justify-center mx-auto mb-6"
+                      className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
                     >
-                      <svg className="w-10 h-10 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                       </svg>
                     </motion.div>
-                    <h3 className="font-display text-2xl font-bold mb-2">Message Sent!</h3>
-                    <p className="text-slate-400">
+                    <h3 className="font-display text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
+                    <p className="text-gray-600">
                       Thank you for contacting us. We'll get back to you soon.
                     </p>
                   </motion.div>
@@ -251,10 +251,10 @@ const ContactPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                 Quick Answers
               </h2>
-              <p className="text-slate-400 mb-8">
+              <p className="text-gray-600 mb-8">
                 Looking for immediate answers? Check out our FAQ section
               </p>
               <Button variant="secondary" size="lg">

@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
-import BookTestRideModal from '../components/booking/BookTestRideModal'
-import ConfiguratorComponent from '../components/configurator/ConfiguratorComponent'
+import BookTestRideModal from '../components/booking/BookingModal'
+import ConfiguratorComponent from '../components/configurator/Configurator'
 
 const ConfiguratorPage = () => {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <Header onBookTestRide={() => setIsBookModalOpen(true)} />
+      <Header />
       
-      <main>
+      <main className="lg:ml-24">
         <ConfiguratorComponent />
       </main>
 

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
-import BookTestRideModal from '../components/booking/BookTestRideModal'
+import BookTestRideModal from '../components/booking/BookingModal'
 import Button from '../components/ui/Button'
 
 interface ProductData {
@@ -94,9 +94,9 @@ const ProductPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <Header onBookTestRide={() => setIsBookModalOpen(true)} />
+      <Header />
       
-      <main className="pt-24">
+      <main className="pt-24 lg:ml-24">
         {/* Hero Section */}
         <section className="section-padding">
           <div className="container-custom">

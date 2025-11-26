@@ -70,7 +70,7 @@ const AboutPage = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      <main className="pt-20">
+      <main className="pt-20 lg:ml-24">
         {/* Hero Section */}
         <section className="py-24 bg-gradient-to-br from-primary/5 to-accent/5">
           <div className="container-custom">

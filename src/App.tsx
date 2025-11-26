@@ -7,7 +7,7 @@ function App() {
     // Preload critical images
     const preloadImages = () => {
       // Add your critical image paths here
-      const images = [
+      const images: string[] = [
         // '/images/hero-ev.jpg',
         // Add more critical images
       ]
