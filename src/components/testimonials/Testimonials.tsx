@@ -91,7 +91,7 @@ const TestimonialsCarousel = () => {
   }
 
   return (
-    <section className="py-32 bg-white relative">
+    <section id="testimonials" className="py-32 bg-white relative">
       {/* Subtle grid background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
       

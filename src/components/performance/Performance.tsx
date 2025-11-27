@@ -42,7 +42,7 @@ const features: PerformanceFeature[] = [
 
 const PerformanceSection = () => {
   return (
-    <section className="py-32 bg-black text-white relative overflow-hidden">
+    <section id="performance" className="py-32 bg-black text-white relative overflow-hidden">
       {/* Subtle grid background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
       
