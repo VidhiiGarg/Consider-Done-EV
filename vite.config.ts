@@ -28,6 +28,8 @@ export default defineConfig({
     },
     target: 'esnext',
     minify: 'terser',
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'framer-motion'],
