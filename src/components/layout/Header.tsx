@@ -9,13 +9,14 @@ const Header = () => {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const [activeSection, setActiveSection] = useState<string>('')
   const [showSidebar, setShowSidebar] = useState(true)
+  const [menuExpanded, setMenuExpanded] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
       // Sidebar appears after scrolling past hero section (typically ~600-800px)
-      setPassedHero(window.scrollY > 600)
+      setPassedHero(window.scrollY > 100)
 
       // Hide sidebar when reaching footer
       const footer = document.querySelector('footer')
@@ -27,7 +28,7 @@ const Header = () => {
 
       // Track active section on home page
       if (location.pathname === '/') {
-        const sections = ['products', 'features', 'advanced-features', 'performance', 'why-electric', 'emi-calculator', 'range-charging', 'offers', 'testimonials', 'faq']
+        const sections = ['products', 'gallery', 'features', 'advanced-features', 'performance', 'why-electric', 'emi-calculator', 'range-charging', 'offers', 'testimonials', 'faq']
         
         for (const sectionId of sections) {
           const element = document.getElementById(sectionId)
@@ -54,6 +55,15 @@ const Header = () => {
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      )
+    },
+    {
+      name: 'Gallery',
+      sectionId: 'gallery',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       )
     },
@@ -410,203 +420,231 @@ const Header = () => {
       </AnimatePresence>
       </motion.header>
 
-      {/* Left Sidebar - Appears when scrolled past hero */}
+      {/* Circular Radial Menu - Appears when scrolled past hero */}
       <motion.aside
-        initial={{ x: -100, opacity: 0 }}
+        initial={{ scale: 0, opacity: 0 }}
         animate={{ 
-          x: (passedHero && showSidebar) ? 0 : -100,
+          scale: (passedHero && showSidebar) ? 1 : 0,
           opacity: (passedHero && showSidebar) ? 1 : 0
         }}
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="fixed left-0 top-0 h-screen z-50 pointer-events-none"
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="hidden lg:block fixed left-24 top-1/2 -translate-y-1/2 z-50"
       >
-        <div className="h-full flex items-center pl-6 pointer-events-auto">
-          <motion.div 
-            className="backdrop-blur-2xl shadow-2xl rounded-2xl p-3 border bg-white/95 border-gray-200"
-            initial={{ scale: 0.9 }}
+        <div 
+          className="relative flex items-center justify-center w-fit h-fit"
+          onMouseEnter={() => setMenuExpanded(true)}
+          onMouseLeave={() => setMenuExpanded(false)}
+        >
+          {/* Central Menu Button */}
+          <motion.button
+            onMouseEnter={() => setHoveredLink('menu')}
+            onMouseLeave={() => setHoveredLink(null)}
+            className="relative flex items-center justify-center w-16 h-16 bg-white border-2 border-gray-200 text-gray-900 rounded-full shadow-xl hover:border-gray-400 hover:shadow-2xl transition-all duration-300 z-20"
+            animate={{
+              y: [0, -15, 0, -8, 0],
+              x: [0, 3, 0, -3, 0],
+              rotate: [0, 2, 0, -2, 0],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              times: [0, 0.25, 0.5, 0.75, 1]
+            }}
+            whileHover={{ scale: 1.1, y: 0, x: 0, rotate: 0 }}
           >
-            {/* Logo at top */}
-            <Link to="/" className="flex items-center justify-center mb-3 group">
-              <motion.div 
-                className="relative flex items-center justify-center rounded-lg shadow-md w-10 h-10 bg-gray-900"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="font-display font-black text-xs tracking-tighter leading-none text-white">
-                  CD
-                </span>
-              </motion.div>
-            </Link>
-
-            {/* Divider */}
-            <div className="h-px mb-3 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-
-            {/* Navigation Icons */}
-            <div className="flex flex-col space-y-1.5">
-              {location.pathname === '/' ? (
-                // Show section links for Home page
-                sectionLinks.map((link, index) => {
-                  const isActive = activeSection === link.sectionId
-                  
-                  return (
-                    <motion.div
-                      key={link.name}
-                      initial={{ x: -50, opacity: 0 }}
-                      animate={{ 
-                        x: passedHero ? 0 : -50,
-                        opacity: passedHero ? 1 : 0
-                      }}
-                      transition={{ 
-                        delay: 0.1 + index * 0.05,
-                        duration: 0.4,
-                        ease: [0.25, 0.46, 0.45, 0.94]
-                      }}
-                    >
-                      <button
-                        onClick={() => handleSectionClick(link.sectionId)}
-                        onMouseEnter={() => setHoveredLink(link.name)}
-                        onMouseLeave={() => setHoveredLink(null)}
-                        className={`relative group flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300 ${
-                          isActive 
-                            ? 'bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/25' 
-                            : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-primary hover:scale-105'
-                        }`}
-                        title={link.name}
-                      >
-                        <motion.span
-                          animate={{ 
-                            scale: hoveredLink === link.name ? 1.15 : 1
-                          }}
-                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                          className="w-4 h-4 flex items-center justify-center"
-                        >
-                          {link.icon}
-                        </motion.span>
-
-                        {/* Tooltip */}
-                        <AnimatePresence>
-                          {hoveredLink === link.name && (
-                            <motion.div
-                              initial={{ opacity: 0, x: -10, scale: 0.9 }}
-                              animate={{ opacity: 1, x: 0, scale: 1 }}
-                              exit={{ opacity: 0, x: -10, scale: 0.9 }}
-                              transition={{ duration: 0.2 }}
-                              className="absolute left-full ml-4 px-4 py-2 text-sm font-semibold rounded-xl whitespace-nowrap shadow-xl bg-gray-900 text-white"
-                            >
-                              {link.name}
-                              <div className="absolute right-full top-1/2 -translate-y-1/2 border-[6px] border-transparent border-r-gray-900" />
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-
-                        {/* Active indicator */}
-                        {isActive && (
-                          <motion.div
-                            layoutId="activeSidebarIndicator"
-                            className="absolute -right-1 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-accent rounded-full shadow-lg"
-                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                          />
-                        )}
-                      </button>
-                    </motion.div>
-                  )
-                })
-              ) : (
-                // Show page links for other pages
-                navLinks.map((link, index) => {
-                  const isActive = location.pathname === link.path
-                  
-                  return (
-                    <motion.div
-                      key={link.name}
-                      initial={{ x: -50, opacity: 0 }}
-                      animate={{ 
-                        x: passedHero ? 0 : -50,
-                        opacity: passedHero ? 1 : 0
-                      }}
-                      transition={{ 
-                        delay: 0.1 + index * 0.05,
-                        duration: 0.4,
-                        ease: [0.25, 0.46, 0.45, 0.94]
-                      }}
-                    >
-                      <Link
-                        to={link.path}
-                        onClick={() => handleNavClick(link)}
-                        onMouseEnter={() => setHoveredLink(link.name)}
-                        onMouseLeave={() => setHoveredLink(null)}
-                        className={`relative group flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300 ${
-                          isActive 
-                            ? 'bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/25' 
-                            : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-primary hover:scale-105'
-                        }`}
-                        title={link.name}
-                      >
-                        <motion.span
-                          animate={{ 
-                            scale: hoveredLink === link.name ? 1.15 : 1
-                          }}
-                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                          className="w-4 h-4 flex items-center justify-center"
-                        >
-                          {link.icon}
-                        </motion.span>
-
-                        {/* Tooltip */}
-                        <AnimatePresence>
-                          {hoveredLink === link.name && (
-                            <motion.div
-                              initial={{ opacity: 0, x: -10, scale: 0.9 }}
-                              animate={{ opacity: 1, x: 0, scale: 1 }}
-                              exit={{ opacity: 0, x: -10, scale: 0.9 }}
-                              transition={{ duration: 0.2 }}
-                              className="absolute left-full ml-4 px-4 py-2 text-sm font-semibold rounded-xl whitespace-nowrap shadow-xl bg-gray-900 text-white"
-                            >
-                              {link.name}
-                              <div className="absolute right-full top-1/2 -translate-y-1/2 border-[6px] border-transparent border-r-gray-900" />
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-
-                        {/* Active indicator */}
-                        {isActive && (
-                          <motion.div
-                            layoutId="activeSidebarIndicator"
-                            className="absolute -right-1 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-accent rounded-full shadow-lg"
-                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                          />
-                        )}
-                      </Link>
-                    </motion.div>
-                  )
-                })
-              )}
-            </div>
-
-            {/* Divider */}
-            <div className="h-px my-3 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-
-            {/* Test Drive CTA */}
             <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ 
-                y: passedHero ? 0 : 20,
-                opacity: passedHero ? 1 : 0
-              }}
-              transition={{ delay: 0.4, duration: 0.4 }}
+              animate={{ rotate: menuExpanded ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <Link
-                to="/"
-                onClick={() => handleNavClick({ path: '/', scrollTo: 'products' })}
-                className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-primary to-accent text-white rounded-lg shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300"
-                title="Test Drive"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              {menuExpanded ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-              </Link>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              )}
             </motion.div>
-          </motion.div>
+
+            {/* Pulse effect */}
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-gray-300"
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.3, 0, 0.3],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </motion.button>
+
+          {/* Tooltip for main button */}
+          <AnimatePresence>
+            {hoveredLink === 'menu' && !menuExpanded && (
+              <motion.div
+                initial={{ opacity: 0, x: -10, scale: 0.9 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -10, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                className="absolute left-full ml-6 top-1/2 -translate-y-1/2 px-4 py-2 text-sm font-semibold rounded-xl whitespace-nowrap shadow-xl bg-gray-900 text-white"
+              >
+                Navigation Menu
+                <div className="absolute right-full top-1/2 -translate-y-1/2 border-[6px] border-transparent border-r-gray-900" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Radial Menu Items */}
+          <AnimatePresence>
+            {menuExpanded && (
+              <>
+                {(location.pathname === '/' ? sectionLinks : navLinks).map((link, index) => {
+                  const isActive = location.pathname === '/' 
+                    ? activeSection === (link as any).sectionId 
+                    : location.pathname === (link as any).path
+                  
+                  const totalItems = location.pathname === '/' ? sectionLinks.length : navLinks.length
+                  const angle = (index * (2 * Math.PI)) / totalItems - Math.PI / 2
+                  const radius = 85
+                  const x = Math.cos(angle) * radius
+                  const y = Math.sin(angle) * radius
+
+                  return (
+                    <motion.div
+                      key={link.name}
+                      initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
+                      animate={{ 
+                        scale: 1,
+                        x: x,
+                        y: y,
+                        opacity: 1 
+                      }}
+                      exit={{ scale: 0, x: 0, y: 0, opacity: 0 }}
+                      transition={{ 
+                        delay: index * 0.05,
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20
+                      }}
+                      className="absolute"
+                    >
+                      {location.pathname === '/' ? (
+                        <button
+                          onClick={() => handleSectionClick((link as any).sectionId)}
+                          onMouseEnter={() => setHoveredLink(link.name)}
+                          onMouseLeave={() => setHoveredLink(null)}
+                          className={`relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 ${
+                            isActive 
+                              ? 'bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/40' 
+                              : 'bg-white text-gray-600 hover:bg-gray-100 hover:text-primary hover:scale-110 shadow-xl'
+                          }`}
+                        >
+                          <motion.span
+                            animate={{ 
+                              scale: hoveredLink === link.name ? 1.2 : 1,
+                              rotate: hoveredLink === link.name ? 360 : 0
+                            }}
+                            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                            className="w-5 h-5 flex items-center justify-center"
+                          >
+                            {link.icon}
+                          </motion.span>
+
+                          {/* Tooltip */}
+                          <AnimatePresence>
+                            {hoveredLink === link.name && (
+                              <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute left-full ml-3 px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap shadow-xl bg-gray-900 text-white z-50"
+                              >
+                                {link.name}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+
+                          {/* Active ring */}
+                          {isActive && (
+                            <motion.div
+                              className="absolute inset-0 rounded-full border-2 border-white"
+                              animate={{
+                                scale: [1, 1.15, 1],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }}
+                            />
+                          )}
+                        </button>
+                      ) : (
+                        <Link
+                          to={(link as any).path}
+                          onClick={() => handleNavClick(link as any)}
+                          onMouseEnter={() => setHoveredLink(link.name)}
+                          onMouseLeave={() => setHoveredLink(null)}
+                          className={`relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 ${
+                            isActive 
+                              ? 'bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/40' 
+                              : 'bg-white text-gray-600 hover:bg-gray-100 hover:text-primary hover:scale-110 shadow-xl'
+                          }`}
+                        >
+                          <motion.span
+                            animate={{ 
+                              scale: hoveredLink === link.name ? 1.2 : 1,
+                              rotate: hoveredLink === link.name ? 360 : 0
+                            }}
+                            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                            className="w-5 h-5 flex items-center justify-center"
+                          >
+                            {link.icon}
+                          </motion.span>
+
+                          {/* Tooltip */}
+                          <AnimatePresence>
+                            {hoveredLink === link.name && (
+                              <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute left-full ml-3 px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap shadow-xl bg-gray-900 text-white z-50"
+                              >
+                                {link.name}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+
+                          {/* Active ring */}
+                          {isActive && (
+                            <motion.div
+                              className="absolute inset-0 rounded-full border-2 border-white"
+                              animate={{
+                                scale: [1, 1.15, 1],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }}
+                            />
+                          )}
+                        </Link>
+                      )}
+                    </motion.div>
+                  )
+                })}
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </motion.aside>
     </>

@@ -92,7 +92,7 @@ const ConfiguratorComponent = () => {
 
   return (
     <div className="min-h-screen bg-white py-32">
-      <div className="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+      <div className="container-custom">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

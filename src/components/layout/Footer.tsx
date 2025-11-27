@@ -47,7 +47,7 @@ const Footer = () => {
     <footer className="bg-black text-white border-t border-white/10">
       {/* Newsletter Section */}
       <div className="border-b border-white/10">
-        <div className="max-w-[1400px] mx-auto px-8 md:px-16 lg:pl-32 py-24">
+        <div className="container-custom py-24">
           <div className="max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -96,7 +96,7 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="max-w-[1400px] mx-auto px-8 md:px-16 lg:pl-32 py-24">
+      <div className="container-custom py-24">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 lg:gap-16">
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1">
@@ -155,7 +155,7 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
-        <div className="max-w-[1400px] mx-auto px-8 md:px-16 lg:pl-32 py-8">
+        <div className="container-custom py-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-white/40 text-xs font-light tracking-wider">
               © {new Date().getFullYear()} Consider Done EV. All rights reserved.

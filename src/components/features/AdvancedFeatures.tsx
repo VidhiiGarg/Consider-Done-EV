@@ -49,7 +49,7 @@ const AdvancedFeatures = () => {
       {/* Subtle grid background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
       
-      <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:pl-32">
+      <div className="relative container-custom">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

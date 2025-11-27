@@ -11,7 +11,7 @@ const ConfiguratorPage = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      <main className="lg:ml-24">
+      <main className="page-content">
         <ConfiguratorComponent />
       </main>
 

@@ -52,8 +52,9 @@ const FAQSection = () => {
       {/* Subtle Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
       
-      <div className="relative max-w-5xl mx-auto px-8 md:px-16">
-        <motion.div
+      <div className="relative container-custom">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -128,6 +129,7 @@ const FAQSection = () => {
             Contact Support
           </button>
         </motion.div>
+        </div>
       </div>
     </section>
   )

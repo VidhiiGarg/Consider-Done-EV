@@ -155,24 +155,26 @@ const FeaturesPage = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      <main className="lg:ml-24">
+      <main className="page-content">
         {/* Hero Section */}
-        <section className="py-32 bg-white bg-grid-pattern lg:px-32">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <h1 className="font-light text-5xl md:text-7xl tracking-tight text-gray-900 mb-6">
-              Advanced Features
-            </h1>
-            <div className="w-16 h-px bg-gray-900 mx-auto mb-6" />
-            <p className="font-light text-gray-600 text-lg max-w-3xl mx-auto">
-              Discover the cutting-edge features that make our electric vehicles stand out. 
-              From advanced safety systems to smart connectivity, every detail is designed for your ultimate riding experience.
-            </p>
-          </motion.div>
+        <section className="py-32 bg-white bg-grid-pattern">
+          <div className="container-custom">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <h1 className="font-light text-5xl md:text-7xl tracking-tight text-gray-900 mb-6">
+                Advanced Features
+              </h1>
+              <div className="w-16 h-px bg-gray-900 mx-auto mb-6" />
+              <p className="font-light text-gray-600 text-lg max-w-3xl mx-auto">
+                Discover the cutting-edge features that make our electric vehicles stand out. 
+                From advanced safety systems to smart connectivity, every detail is designed for your ultimate riding experience.
+              </p>
+            </motion.div>
+          </div>
         </section>
 
         {/* Features Grid */}
@@ -181,13 +183,13 @@ const FeaturesPage = () => {
           return (
             <section 
               key={category.category} 
-              className={`py-32 lg:-ml-24 lg:pl-24 ${
+              className={`py-32 ${
                 categoryIndex % 2 === 0 
                   ? 'bg-black text-white' 
                   : 'bg-white bg-grid-pattern text-gray-900'
               }`}
             >
-              <div className="lg:px-32">
+              <div className="container-custom">
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -252,31 +254,33 @@ const FeaturesPage = () => {
         })}
 
         {/* CTA Section */}
-        <section className="py-32 bg-black text-white lg:-ml-24 lg:pl-24">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="lg:px-32 text-center"
-          >
-            <h2 className="font-light text-4xl md:text-5xl tracking-tight mb-6">
-              Experience It Yourself
-            </h2>
-            <p className="font-light text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
-              The best way to understand our features is to test ride one of our vehicles. 
-              Book your test ride today and discover the future of mobility.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <button className="group px-8 py-4 bg-white text-black font-light hover:bg-gray-100 transition-all duration-300 flex items-center gap-2">
-                Book Test Ride
-                <ArrowRight strokeWidth={1} className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="group px-8 py-4 border border-zinc-800 text-white font-light hover:border-white transition-all duration-300 flex items-center gap-2">
-                View Models
-                <ArrowRight strokeWidth={1} className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-          </motion.div>
+        <section className="py-32 bg-black text-white">
+          <div className="container-custom">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <h2 className="font-light text-4xl md:text-5xl tracking-tight mb-6">
+                Experience It Yourself
+              </h2>
+              <p className="font-light text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
+                The best way to understand our features is to test ride one of our vehicles. 
+                Book your test ride today and discover the future of mobility.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <button className="group px-8 py-4 bg-white text-black font-light hover:bg-gray-100 transition-all duration-300 flex items-center gap-2">
+                  Book Test Ride
+                  <ArrowRight strokeWidth={1} className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button className="group px-8 py-4 border border-zinc-800 text-white font-light hover:border-white transition-all duration-300 flex items-center gap-2">
+                  View Models
+                  <ArrowRight strokeWidth={1} className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </motion.div>
+          </div>
         </section>
       </main>
 

@@ -96,7 +96,7 @@ const ProductPage = () => {
     <div className="min-h-screen bg-slate-950">
       <Header />
       
-      <main className="pt-24 lg:ml-24">
+      <main className="pt-24 page-content">
         {/* Hero Section */}
         <section className="section-padding">
           <div className="container-custom">

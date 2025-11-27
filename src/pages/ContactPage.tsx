@@ -68,12 +68,12 @@ const ContactPage = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      <main className="lg:ml-24">
+      <main className="page-content">
         {/* Header Section */}
         <section className="py-32 bg-white relative">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
           
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+          <div className="relative container-custom">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -128,8 +128,8 @@ const ContactPage = () => {
         </section>
 
         {/* Contact Form */}
-        <section className="py-32 bg-black relative lg:-ml-24 lg:pl-24">
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+        <section className="py-32 bg-black relative">
+          <div className="relative container-custom">
             <div className="max-w-4xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -267,7 +267,7 @@ const ContactPage = () => {
         <section className="py-32 bg-white relative">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
           
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+          <div className="relative container-custom">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

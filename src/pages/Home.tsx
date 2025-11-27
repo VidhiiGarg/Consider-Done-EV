@@ -3,6 +3,7 @@ import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import HeroSection from '../components/hero/Hero'
 import ProductShowcase from '../components/product/Products'
+import ProductGallery from '../components/product/ProductGallery'
 import USPFeatures from '../components/features/Features'
 import AdvancedFeatures from '../components/features/AdvancedFeatures'
 import PerformanceSection from '../components/performance/Performance'
@@ -24,6 +25,7 @@ const Home = () => {
       <main>
         <HeroSection onBookTestRide={() => setIsBookModalOpen(true)} />
         <ProductShowcase />
+        <ProductGallery />
         <USPFeatures />
         <AdvancedFeatures />
         <PerformanceSection />

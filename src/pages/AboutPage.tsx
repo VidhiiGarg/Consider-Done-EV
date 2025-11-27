@@ -71,12 +71,12 @@ const AboutPage = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      <main className="lg:ml-24">
+      <main className="page-content">
         {/* Hero Section */}
         <section className="py-32 bg-white relative">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
           
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+          <div className="relative container-custom">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -97,8 +97,8 @@ const AboutPage = () => {
         </section>
 
         {/* Stats */}
-        <section className="py-32 bg-black relative lg:-ml-24 lg:pl-24">
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+        <section className="py-32 bg-black relative">
+          <div className="relative container-custom">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
               {stats.map((stat, index) => {
                 const IconComponent = stat.icon
@@ -127,7 +127,7 @@ const AboutPage = () => {
         <section className="py-32 bg-white relative">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
           
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+          <div className="relative container-custom">
             <div className="grid md:grid-cols-2 gap-16 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -171,8 +171,8 @@ const AboutPage = () => {
         </section>
 
         {/* Values */}
-        <section className="py-32 bg-black relative lg:-ml-24 lg:pl-24">
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+        <section className="py-32 bg-black relative">
+          <div className="relative container-custom">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -213,7 +213,7 @@ const AboutPage = () => {
         <section className="py-32 bg-white relative">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
           
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+          <div className="relative container-custom">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -256,8 +256,8 @@ const AboutPage = () => {
         </section>
 
         {/* CTA */}
-        <section className="py-32 bg-black relative lg:-ml-24 lg:pl-24">
-          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32 text-center">
+        <section className="py-32 bg-black relative">
+          <div className="relative container-custom text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

@@ -34,7 +34,7 @@ const OffersSection = () => {
       {/* Subtle grid background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
       
-      <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:pl-32">
+      <div className="relative container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

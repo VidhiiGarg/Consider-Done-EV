@@ -100,8 +100,8 @@ const AnimatedCounter = ({ end, duration = 2 }: { end: number; duration?: number
 
 const SpecificationsSection = () => {
   return (
-    <section className="py-20 md:py-32 px-6 md:px-12 bg-gradient-to-br from-gray-900 via-primary to-gray-900">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-20 md:py-32 bg-gradient-to-br from-gray-900 via-primary to-gray-900">
+      <div className="container-custom\">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
