@@ -48,49 +48,53 @@ const FAQSection = () => {
   ]
 
   return (
-    <section id="faq" className="py-24 bg-white">
-      <div className="container-custom max-w-4xl">
+    <section id="faq" className="py-32 bg-black text-white relative">
+      {/* Subtle Grid Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
+      
+      <div className="relative max-w-5xl mx-auto px-8 md:px-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.8 }}
+          className="mb-20"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-xl text-gray-600">
-            Got questions? We've got answers!
+          <p className="text-sm font-light tracking-[0.3em] uppercase text-white/40 mb-6">
+            QUESTIONS
           </p>
+          <h2 className="text-6xl md:text-7xl font-light text-white mb-6 tracking-tight">
+            Frequently Asked
+          </h2>
         </motion.div>
 
-        <div className="space-y-4">
+        <div className="space-y-0">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.05, duration: 0.5 }}
-              className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-200 hover:border-primary/30 transition-all duration-300"
+              transition={{ delay: index * 0.03, duration: 0.5 }}
+              className="border-b border-white/10"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-6 py-5 text-left flex justify-between items-center hover:bg-gray-100 transition-colors duration-200"
+                className="w-full px-0 py-8 text-left flex justify-between items-center hover:opacity-70 transition-opacity duration-300 group"
               >
-                <span className="font-bold text-gray-900 text-lg pr-8">
+                <span className="font-light text-white text-xl md:text-2xl pr-8">
                   {faq.question}
                 </span>
                 <motion.svg
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
-                  className="w-6 h-6 text-primary flex-shrink-0"
+                  className="w-6 h-6 text-white/60 group-hover:text-white flex-shrink-0 transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  strokeWidth={1}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path strokeLinecap="square" strokeLinejoin="miter" d="M19 9l-7 7-7-7" />
                 </motion.svg>
               </button>
               <motion.div
@@ -102,7 +106,7 @@ const FAQSection = () => {
                 transition={{ duration: 0.3 }}
                 className="overflow-hidden"
               >
-                <div className="px-6 pb-5 text-gray-600 leading-relaxed">
+                <div className="px-0 pb-8 text-white/60 leading-relaxed font-light text-lg">
                   {faq.answer}
                 </div>
               </motion.div>
@@ -116,11 +120,11 @@ const FAQSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-12 text-center bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl p-8"
+          className="mt-20 border border-white/20 p-12"
         >
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Still have questions?</h3>
-          <p className="text-gray-600 mb-6">Our team is here to help you!</p>
-          <button className="bg-gradient-to-r from-primary to-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-xl transition-all duration-300 hover:scale-105">
+          <h3 className="text-3xl font-light text-white mb-3">Still have questions?</h3>
+          <p className="text-white/60 mb-8 font-light">Our team is here to help you</p>
+          <button className="border border-white/40 text-white px-10 py-4 font-light hover:bg-white hover:text-black transition-all duration-300 text-sm tracking-wider uppercase">
             Contact Support
           </button>
         </motion.div>

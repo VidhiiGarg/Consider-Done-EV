@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import { Check, ChevronLeft, ChevronRight, Zap, Palette, Battery, Sofa, Circle, Cpu } from 'lucide-react'
 
 interface ConfigOption {
   id: string
@@ -67,12 +68,12 @@ const ConfiguratorComponent = () => {
   })
 
   const steps = [
-    { title: 'Model', key: 'model', options: models },
-    { title: 'Color', key: 'color', options: colors },
-    { title: 'Battery', key: 'battery', options: batteries },
-    { title: 'Interior', key: 'interior', options: interiors },
-    { title: 'Wheels', key: 'wheels', options: wheels },
-    { title: 'Autopilot', key: 'autopilot', options: autopilots },
+    { title: 'Model', key: 'model', options: models, icon: Zap },
+    { title: 'Color', key: 'color', options: colors, icon: Palette },
+    { title: 'Battery', key: 'battery', options: batteries, icon: Battery },
+    { title: 'Interior', key: 'interior', options: interiors, icon: Sofa },
+    { title: 'Wheels', key: 'wheels', options: wheels, icon: Circle },
+    { title: 'Autopilot', key: 'autopilot', options: autopilots, icon: Cpu },
   ]
 
   const totalPrice = Object.values(config).reduce((sum, option) => sum + option.price, 0)
@@ -90,18 +91,20 @@ const ConfiguratorComponent = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-24">
-      <div className="container-custom py-12">
+    <div className="min-h-screen bg-white py-32">
+      <div className="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-24"
         >
-          <h1 className="font-display text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-            Configure Your <span className="gradient-text">Dream EV</span>
+          <h1 className="font-light text-5xl md:text-7xl tracking-tight text-gray-900 mb-6">
+            Configure Your Dream EV
           </h1>
-          <p className="text-gray-600 text-lg">
+          <div className="w-16 h-px bg-black/20 mx-auto mb-8" />
+          <p className="text-gray-600 font-light text-xl leading-relaxed">
             Customize every detail to match your style and needs
           </p>
         </motion.div>
@@ -110,21 +113,25 @@ const ConfiguratorComponent = () => {
           {/* Left: Configuration Options */}
           <div className="lg:col-span-2">
             {/* Steps Navigation */}
-            <div className="mb-8 overflow-x-auto">
-              <div className="flex space-x-4 pb-4">
-                {steps.map((step, index) => (
-                  <button
-                    key={step.key}
-                    onClick={() => setCurrentStep(index)}
-                    className={`flex-shrink-0 px-6 py-3 rounded-full font-medium transition-all ${
-                      currentStep === index
-                        ? 'bg-primary text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {step.title}
-                  </button>
-                ))}
+            <div className="mb-12 overflow-x-auto">
+              <div className="flex space-x-2 pb-4">
+                {steps.map((step, index) => {
+                  const IconComponent = step.icon
+                  return (
+                    <button
+                      key={step.key}
+                      onClick={() => setCurrentStep(index)}
+                      className={`group flex-shrink-0 flex items-center space-x-3 px-6 py-3 border transition-all duration-300 ${
+                        currentStep === index
+                          ? 'border-gray-400 bg-black text-white'
+                          : 'border-gray-200 bg-white text-gray-900 hover:border-gray-400'
+                      }`}
+                    >
+                      <IconComponent className="w-4 h-4" strokeWidth={1} />
+                      <span className="font-light">{step.title}</span>
+                    </button>
+                  )
+                })}
               </div>
             </div>
 
@@ -136,9 +143,9 @@ const ConfiguratorComponent = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white border border-gray-200 rounded-3xl p-8 shadow-lg"
+                className="border border-gray-200 p-8"
               >
-                <h2 className="font-display text-2xl font-bold text-gray-900 mb-6">
+                <h2 className="font-light text-3xl tracking-tight text-gray-900 mb-8">
                   Choose {steps[currentStep].title}
                 </h2>
 
@@ -151,45 +158,48 @@ const ConfiguratorComponent = () => {
                       <motion.button
                         key={option.id}
                         onClick={() => handleSelect(steps[currentStep].key, option)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`relative p-4 rounded-2xl border-2 transition-all ${
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`relative p-6 border transition-all duration-300 ${
                           isSelected
-                            ? 'border-primary bg-primary/5 shadow-lg'
+                            ? 'border-gray-400'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
-                        <div className={`w-full aspect-square rounded-xl ${colorMap[option.id]} mb-3 border border-gray-300 shadow`} />
-                        <div className="text-sm font-medium text-gray-900 mb-1">{option.name}</div>
-                        <div className="text-xs text-gray-500">
+                        <div className={`w-full aspect-square ${colorMap[option.id]} mb-4 border border-gray-300`} />
+                        <div className="font-light text-sm text-gray-900 mb-1">{option.name}</div>
+                        <div className="font-light text-xs text-gray-500">
                           {option.price > 0 ? `+$${option.price.toLocaleString()}` : 'Included'}
                         </div>
+                        {isSelected && (
+                          <div className="absolute top-4 right-4 w-6 h-6 border border-gray-400 bg-black flex items-center justify-center">
+                            <Check className="w-4 h-4 text-white" strokeWidth={1} />
+                          </div>
+                        )}
                       </motion.button>
                     ) : (
                       // Regular options
                       <motion.button
                         key={option.id}
                         onClick={() => handleSelect(steps[currentStep].key, option)}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className={`p-6 rounded-2xl border-2 text-left transition-all ${
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        className={`p-6 border text-left transition-all duration-300 ${
                           isSelected
-                            ? 'border-primary bg-primary/5 shadow-lg'
+                            ? 'border-gray-400 bg-gray-50'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <div className="font-semibold text-gray-900 mb-2">{option.name}</div>
-                            <div className="text-sm text-gray-600">
+                            <div className="font-light text-lg text-gray-900 mb-2">{option.name}</div>
+                            <div className="font-light text-sm text-gray-600">
                               {option.price > 0 ? `+$${option.price.toLocaleString()}` : 'Included'}
                             </div>
                           </div>
                           {isSelected && (
-                            <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                              </svg>
+                            <div className="w-6 h-6 border border-gray-400 bg-black flex items-center justify-center flex-shrink-0">
+                              <Check className="w-4 h-4 text-white" strokeWidth={1} />
                             </div>
                           )}
                         </div>
@@ -199,20 +209,22 @@ const ConfiguratorComponent = () => {
                 </div>
 
                 {/* Navigation Buttons */}
-                <div className="flex items-center justify-between mt-8">
+                <div className="flex items-center justify-between mt-12">
                   <button
                     onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
                     disabled={currentStep === 0}
-                    className="px-6 py-3 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="group flex items-center space-x-2 px-6 py-3 border border-gray-200 text-gray-900 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-200 transition-all duration-300"
                   >
-                    ← Previous
+                    <ChevronLeft className="w-4 h-4" strokeWidth={1} />
+                    <span className="font-light">Previous</span>
                   </button>
                   <button
                     onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
                     disabled={currentStep === steps.length - 1}
-                    className="px-6 py-3 bg-primary text-white font-semibold rounded-full hover:bg-primary/90 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="group flex items-center space-x-2 px-6 py-3 bg-black text-white hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black transition-all duration-300"
                   >
-                    Next →
+                    <span className="font-light">Next</span>
+                    <ChevronRight className="w-4 h-4" strokeWidth={1} />
                   </button>
                 </div>
               </motion.div>
@@ -220,65 +232,67 @@ const ConfiguratorComponent = () => {
           </div>
 
           {/* Right: Summary */}
-          <div className="lg:sticky lg:top-24 h-fit">
+          <div className="lg:sticky lg:top-32 h-fit">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-gray-200 rounded-3xl p-8 shadow-lg"
+              transition={{ duration: 0.8 }}
+              className="border border-gray-200 p-8"
             >
-              <h3 className="font-display text-2xl font-bold text-gray-900 mb-6">Your Configuration</h3>
+              <h3 className="font-light text-2xl tracking-tight text-gray-900 mb-8">Your Configuration</h3>
 
               {/* Vehicle Visualization */}
-              <div className="aspect-video bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl mb-6 flex items-center justify-center overflow-hidden border border-gray-200">
+              <div className="aspect-video border border-gray-200 mb-8 flex items-center justify-center overflow-hidden">
                 <div className="text-center">
-                  <div className="text-6xl mb-2">⚡</div>
-                  <div className="text-sm text-gray-600">{config.model.name}</div>
-                  <div className={`w-12 h-12 mx-auto mt-4 rounded-full ${colorMap[config.color.id]} border-2 border-gray-300 shadow`} />
+                  <Zap className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1} />
+                  <div className="font-light text-sm text-gray-600 mb-4">{config.model.name}</div>
+                  <div className={`w-12 h-12 mx-auto ${colorMap[config.color.id]} border border-gray-300`} />
                 </div>
               </div>
 
               {/* Selected Options */}
-              <div className="space-y-4 mb-6">
+              <div className="space-y-4 mb-8">
                 {Object.entries(config).map(([key, option]) => (
-                  <div key={key} className="flex items-center justify-between text-sm">
+                  <div key={key} className="flex items-center justify-between font-light text-sm">
                     <span className="text-gray-600 capitalize">{key}:</span>
-                    <span className="font-medium text-gray-900">{option.name}</span>
+                    <span className="text-gray-900">{option.name}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t border-gray-200 pt-6">
-                <div className="flex items-baseline justify-between mb-6">
-                  <span className="text-gray-600">Total Price</span>
+              <div className="border-t border-gray-200 pt-8">
+                <div className="flex items-baseline justify-between mb-8">
+                  <span className="text-gray-600 font-light">Total Price</span>
                   <div className="text-right">
-                    <div className="text-3xl font-bold gradient-text">
+                    <div className="text-4xl font-light tracking-tight text-gray-900">
                       ${totalPrice.toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">Before taxes & fees</div>
+                    <div className="text-xs text-gray-500 font-light mt-1">Before taxes & fees</div>
                   </div>
                 </div>
 
-                <button className="w-full py-4 bg-primary text-white font-bold rounded-full hover:bg-primary/90 shadow-lg transition-all mb-3">
+                <button className="w-full py-4 bg-black text-white font-light hover:bg-gray-900 transition-all duration-300 mb-4">
                   Reserve Now
                 </button>
-                <button className="w-full py-4 bg-white border-2 border-gray-300 text-gray-900 font-semibold rounded-full hover:border-primary transition-all">
+                <button className="w-full py-4 border border-gray-200 text-gray-900 font-light hover:border-gray-400 transition-all duration-300">
                   Book Test Ride
                 </button>
               </div>
 
               {/* Progress Indicator */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center justify-between text-sm mb-2">
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <div className="flex items-center justify-between font-light text-sm mb-3">
                   <span className="text-gray-600">Configuration Progress</span>
-                  <span className="text-primary font-medium">
+                  <span className="text-gray-900">
                     {currentStep + 1}/{steps.length}
                   </span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-1 bg-gray-200 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-                    className="h-full bg-gradient-to-r from-primary to-accent"
+                    transition={{ duration: 0.3 }}
+                    className="h-full bg-black"
                   />
                 </div>
               </div>

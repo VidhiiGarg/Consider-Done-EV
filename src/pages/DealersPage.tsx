@@ -1,8 +1,19 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapPin, Phone, Clock, Mail, Search, ArrowRight } from 'lucide-react'
+import L from 'leaflet'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import BookTestRideModal from '../components/booking/BookingModal'
+
+// Fix for default marker icons in Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+})
 
 interface Dealer {
   id: string
@@ -114,22 +125,24 @@ const DealersPage = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      <main className="pt-24 lg:ml-24">
+      <main className="lg:ml-24">
         {/* Header Section */}
-        <section className="section-padding">
-          <div className="container-custom text-center">
+        <section className="py-32 bg-white relative">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
+          
+          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center"
             >
-              <span className="inline-block px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-primary text-sm font-medium mb-6">
-                Find Us
-              </span>
-              <h1 className="font-display text-5xl md:text-7xl font-bold text-gray-900 mb-6">
-                Visit Our <span className="gradient-text">Showrooms</span>
+              <h1 className="font-light text-5xl md:text-7xl tracking-tight mb-6 text-gray-900">
+                Visit Our Showrooms
               </h1>
-              <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-12">
+              <div className="w-16 h-px bg-black/20 mx-auto mb-8" />
+              <p className="text-gray-600 font-light text-xl leading-relaxed max-w-2xl mx-auto mb-16">
                 Experience our vehicles in person. Find the nearest Consider Done showroom and book a test ride.
               </p>
 
@@ -141,96 +154,116 @@ const DealersPage = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by city or state..."
-                    className="w-full px-6 py-4 pl-12 bg-white border-2 border-gray-200 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
+                    className="w-full px-0 py-4 pl-12 bg-transparent border-b border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-400 transition-colors font-light"
                   />
-                  <svg
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+                  <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" strokeWidth={1} />
                 </div>
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Map Placeholder */}
-        <section className="container-custom mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl overflow-hidden border border-gray-200 shadow-lg"
-          >
-            <div className="aspect-video flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-6xl mb-4">🗺️</div>
-                <p className="text-gray-600">Interactive Map Coming Soon</p>
-                <p className="text-sm text-gray-500 mt-2">Integrate with Mapbox or Leaflet</p>
-              </div>
-            </div>
-          </motion.div>
+        {/* Map */}
+        <section className="py-32 bg-black relative lg:-ml-24 lg:pl-24">
+          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="border border-zinc-800 overflow-hidden h-[600px]"
+            >
+              <MapContainer
+                center={[39.8283, -98.5795]}
+                zoom={4}
+                style={{ height: '100%', width: '100%' }}
+                className="grayscale"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {filteredDealers.map((dealer) => (
+                  <Marker key={dealer.id} position={[dealer.lat, dealer.lng]}>
+                    <Popup>
+                      <div className="font-light">
+                        <h3 className="font-normal text-sm mb-2">{dealer.name}</h3>
+                        <p className="text-xs text-gray-600 mb-1">{dealer.address}</p>
+                        <p className="text-xs text-gray-600 mb-2">{dealer.city}, {dealer.state}</p>
+                        <a href={`tel:${dealer.phone}`} className="text-xs text-black hover:underline">{dealer.phone}</a>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+            </motion.div>
+          </div>
         </section>
 
         {/* Dealers List */}
-        <section className="section-padding bg-gray-50">
-          <div className="container-custom">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="py-32 bg-white relative">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
+          
+          <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredDealers.map((dealer, index) => (
                 <motion.div
                   key={dealer.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-primary hover:shadow-lg transition-all"
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  className="border border-gray-200 p-8 hover:border-gray-400 transition-colors duration-500 group"
                 >
-                  <h3 className="font-display text-xl font-bold text-gray-900 mb-4">{dealer.name}</h3>
+                  <h3 className="font-light text-2xl tracking-tight text-gray-900 mb-8">{dealer.name}</h3>
                   
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-start space-x-3 text-sm">
-                      <svg className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <div className="text-gray-600">
+                  <div className="space-y-6 mb-8">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-8 h-8 border border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-400 transition-colors duration-500">
+                        <MapPin className="w-4 h-4 text-gray-400 group-hover:text-gray-900 transition-colors duration-500" strokeWidth={1} />
+                      </div>
+                      <div className="text-gray-600 font-light text-sm leading-relaxed">
                         <div>{dealer.address}</div>
                         <div>{dealer.city}, {dealer.state}</div>
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-3 text-sm">
-                      <svg className="w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <span className="text-gray-600">{dealer.phone}</span>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-8 h-8 border border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-400 transition-colors duration-500">
+                        <Phone className="w-4 h-4 text-gray-400 group-hover:text-gray-900 transition-colors duration-500" strokeWidth={1} />
+                      </div>
+                      <a href={`tel:${dealer.phone}`} className="text-gray-600 font-light text-sm hover:text-gray-900 transition-colors">{dealer.phone}</a>
                     </div>
 
-                    <div className="flex items-center space-x-3 text-sm">
-                      <svg className="w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span className="text-gray-600">{dealer.hours}</span>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-8 h-8 border border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-400 transition-colors duration-500">
+                        <Clock className="w-4 h-4 text-gray-400 group-hover:text-gray-900 transition-colors duration-500" strokeWidth={1} />
+                      </div>
+                      <span className="text-gray-600 font-light text-sm">{dealer.hours}</span>
+                    </div>
+
+                    <div className="flex items-center space-x-4">
+                      <div className="w-8 h-8 border border-gray-200 flex items-center justify-center flex-shrink-0 group-hover:border-gray-400 transition-colors duration-500">
+                        <Mail className="w-4 h-4 text-gray-400 group-hover:text-gray-900 transition-colors duration-500" strokeWidth={1} />
+                      </div>
+                      <a href={`mailto:${dealer.email}`} className="text-gray-600 font-light text-sm hover:text-gray-900 transition-colors">{dealer.email}</a>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 mb-6">
+                  <div className="flex flex-wrap gap-2 mb-8">
                     {dealer.services.map((service) => (
                       <span
                         key={service}
-                        className="px-3 py-1 bg-primary/10 border border-primary/30 rounded-full text-primary text-xs"
+                        className="px-3 py-1 border border-gray-200 text-gray-600 text-xs font-light"
                       >
                         {service}
                       </span>
                     ))}
                   </div>
 
-                  <button className="w-full py-3 bg-primary text-white font-semibold rounded-full hover:bg-primary/90 shadow-lg transition-all">
-                    Book Visit
+                  <button className="w-full group/btn flex items-center justify-center space-x-2 py-3 border border-gray-200 text-gray-900 hover:border-gray-400 transition-colors duration-300">
+                    <span className="font-light">Book Visit</span>
+                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" strokeWidth={1} />
                   </button>
                 </motion.div>
               ))}
@@ -238,7 +271,7 @@ const DealersPage = () => {
 
             {filteredDealers.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-gray-600 text-lg">No dealers found matching your search.</p>
+                <p className="text-gray-600 font-light text-lg">No dealers found matching your search.</p>
               </div>
             )}
           </div>

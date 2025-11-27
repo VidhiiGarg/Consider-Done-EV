@@ -8,7 +8,7 @@ const ConfiguratorPage = () => {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-white">
       <Header />
       
       <main className="lg:ml-24">

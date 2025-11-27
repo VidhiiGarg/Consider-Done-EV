@@ -7,6 +7,7 @@ const Header = () => {
   const [passedHero, setPassedHero] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
+  const [sidebarDarkMode, setSidebarDarkMode] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
@@ -14,6 +15,14 @@ const Header = () => {
       setScrolled(window.scrollY > 50)
       // Sidebar appears after scrolling past hero section (typically ~600-800px)
       setPassedHero(window.scrollY > 600)
+
+      // Check if features section is in view
+      const featuresSection = document.getElementById('features')
+      if (featuresSection) {
+        const rect = featuresSection.getBoundingClientRect()
+        const isInView = rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2
+        setSidebarDarkMode(isInView)
+      }
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -293,27 +302,47 @@ const Header = () => {
       >
         <div className="h-full flex items-center pl-6 pointer-events-auto">
           <motion.div 
-            className="bg-white/95 backdrop-blur-2xl shadow-2xl rounded-3xl p-4 border border-gray-100"
-            initial={{ scale: 0.9 }}
-            animate={{ scale: passedHero ? 1 : 0.9 }}
+            animate={{
+              backgroundColor: sidebarDarkMode ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+              borderColor: sidebarDarkMode ? 'rgba(55, 65, 81, 0.5)' : 'rgba(229, 231, 235, 1)'
+            }}
             transition={{ duration: 0.4 }}
+            className="backdrop-blur-2xl shadow-2xl rounded-3xl p-4 border"
+            initial={{ scale: 0.9 }}
           >
             {/* Logo at top */}
             <Link to="/" className="flex items-center justify-center mb-6 group">
               <motion.div 
-                className="relative flex items-center justify-center bg-gray-900 rounded-xl shadow-md px-3 py-2"
+                animate={{
+                  backgroundColor: sidebarDarkMode ? 'rgba(255, 255, 255, 0.95)' : 'rgba(17, 24, 39, 1)',
+                }}
+                transition={{ duration: 0.4 }}
+                className="relative flex items-center justify-center rounded-xl shadow-md px-3 py-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <span className="font-display font-black text-white text-xs tracking-tight">
+                <motion.span 
+                  animate={{
+                    color: sidebarDarkMode ? 'rgba(17, 24, 39, 1)' : 'rgba(255, 255, 255, 1)',
+                  }}
+                  transition={{ duration: 0.4 }}
+                  className="font-display font-black text-xs tracking-tight"
+                >
                   CD
-                </span>
+                </motion.span>
               </motion.div>
             </Link>
 
             {/* Divider */}
-            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-6" />
+            <motion.div 
+              animate={{
+                background: sidebarDarkMode 
+                  ? 'linear-gradient(to right, transparent, rgba(75, 85, 99, 0.5), transparent)'
+                  : 'linear-gradient(to right, transparent, rgba(229, 231, 235, 1), transparent)'
+              }}
+              transition={{ duration: 0.4 }}
+              className="h-px mb-6" 
+            />
 
             {/* Navigation Icons */}
             <div className="flex flex-col space-y-2">
@@ -342,7 +371,9 @@ const Header = () => {
                       className={`relative group flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
                         isActive 
                           ? 'bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/25' 
-                          : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-primary hover:scale-105'
+                          : sidebarDarkMode
+                            ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white hover:scale-105'
+                            : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-primary hover:scale-105'
                       }`}
                       title={link.name}
                     >
@@ -363,10 +394,16 @@ const Header = () => {
                             animate={{ opacity: 1, x: 0, scale: 1 }}
                             exit={{ opacity: 0, x: -10, scale: 0.9 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute left-full ml-4 px-4 py-2 bg-gray-900 text-white text-sm font-semibold rounded-xl whitespace-nowrap shadow-xl"
+                            className={`absolute left-full ml-4 px-4 py-2 text-sm font-semibold rounded-xl whitespace-nowrap shadow-xl ${
+                              sidebarDarkMode ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'
+                            }`}
                           >
                             {link.name}
-                            <div className="absolute right-full top-1/2 -translate-y-1/2 border-[6px] border-transparent border-r-gray-900" />
+                            <div 
+                              className={`absolute right-full top-1/2 -translate-y-1/2 border-[6px] border-transparent ${
+                                sidebarDarkMode ? 'border-r-white' : 'border-r-gray-900'
+                              }`} 
+                            />
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -386,7 +423,15 @@ const Header = () => {
             </div>
 
             {/* Divider */}
-            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6" />
+            <motion.div 
+              animate={{
+                background: sidebarDarkMode 
+                  ? 'linear-gradient(to right, transparent, rgba(75, 85, 99, 0.5), transparent)'
+                  : 'linear-gradient(to right, transparent, rgba(229, 231, 235, 1), transparent)'
+              }}
+              transition={{ duration: 0.4 }}
+              className="h-px my-6" 
+            />
 
             {/* Test Drive CTA */}
             <motion.div

@@ -1,123 +1,116 @@
 import { motion } from 'framer-motion'
+import { Leaf, DollarSign, Zap, Trees } from 'lucide-react'
 
 const SustainabilitySection = () => {
   const impacts = [
     {
       value: "0kg",
       label: "CO₂ Emissions",
-      icon: "🌱"
+      icon: Leaf
     },
     {
       value: "80%",
       label: "Cost Savings",
-      icon: "💰"
+      icon: DollarSign
     },
     {
       value: "100%",
       label: "Electric Power",
-      icon: "⚡"
+      icon: Zap
     },
     {
       value: "5000+",
       label: "Trees Equivalent",
-      icon: "🌳"
+      icon: Trees
     }
   ]
 
-  return (
-    <section className="py-24 bg-gradient-to-br from-green-50 via-white to-blue-50 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-green-400 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
-      </div>
+  const commitments = [
+    "Recyclable battery technology with 95% material recovery",
+    "Solar-powered charging stations across India",
+    "Carbon-neutral manufacturing process",
+    "Sustainable supply chain partnerships"
+  ]
 
-      <div className="container-custom relative z-10">
+  return (
+    <section className="py-32 bg-white relative">
+      {/* Subtle grid background */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
+
+      <div className="relative max-w-[1400px] mx-auto px-8 md:px-16 lg:pl-32">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.8 }}
+          className="mb-24 text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Sustainability at Core
+          <h2 className="font-light text-5xl md:text-7xl tracking-tight mb-6 text-gray-900">
+            Sustainability
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Every ride contributes to a cleaner planet. Join the green revolution.
-          </p>
+          <div className="w-16 h-px bg-black/20 mx-auto" />
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-          {impacts.map((impact, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              className="text-center"
-            >
-              <div className="text-5xl mb-4">{impact.icon}</div>
-              <div className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
-                {impact.value}
-              </div>
-              <div className="text-gray-600 font-medium">{impact.label}</div>
-            </motion.div>
-          ))}
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-32">
+          {impacts.map((impact, index) => {
+            const IconComponent = impact.icon
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.6 }}
+                className="text-center group"
+              >
+                <motion.div 
+                  className="mb-8 flex justify-center"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="w-16 h-16 border border-gray-200 flex items-center justify-center group-hover:border-gray-400 transition-colors duration-500">
+                    <IconComponent className="w-8 h-8 text-gray-400 group-hover:text-gray-900 transition-colors duration-500" strokeWidth={1} />
+                  </div>
+                </motion.div>
+                <div className="font-light text-5xl md:text-6xl mb-3 text-gray-900 tracking-tight">
+                  {impact.value}
+                </div>
+                <div className="text-gray-500 text-xs uppercase tracking-widest font-light">{impact.label}</div>
+              </motion.div>
+            )
+          })}
         </div>
 
+        {/* Environmental Commitment */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl"
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="border-t border-gray-200 pt-24"
         >
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
             <div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-6">
-                Our Environmental Commitment
+              <h3 className="font-light text-4xl md:text-5xl tracking-tight text-gray-900 mb-6 leading-tight">
+                Our Environmental<br />Commitment
               </h3>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700">Recyclable battery technology with 95% material recovery</p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700">Solar-powered charging stations across India</p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700">Carbon-neutral manufacturing processes</p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700">Sustainable sourcing of all components</p>
-                </div>
-              </div>
             </div>
-            <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-green-400 to-blue-500 rounded-3xl flex items-center justify-center text-white text-8xl">
-                🌍
-              </div>
+            <div className="space-y-8">
+              {commitments.map((commitment, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  className="flex items-start space-x-4 group"
+                >
+                  <div className="w-1 h-1 bg-gray-400 flex-shrink-0 mt-3 group-hover:bg-black transition-colors duration-300" />
+                  <p className="text-gray-600 font-light text-lg leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+                    {commitment}
+                  </p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </motion.div>

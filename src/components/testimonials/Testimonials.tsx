@@ -91,29 +91,27 @@ const TestimonialsCarousel = () => {
   }
 
   return (
-    <section className="py-20 md:py-32 px-6 md:px-12 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-32 bg-white relative">
+      {/* Subtle grid background */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px]" />
+      
+      <div className="relative max-w-[1400px] mx-auto px-8 md:px-16">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mb-24 text-center"
         >
-          <span className="inline-block px-4 py-2 bg-accent/10 border border-accent/30 rounded-full text-accent text-sm font-medium mb-4">
-            Customer Stories
-          </span>
-          <h2 className="font-display text-4xl md:text-6xl font-bold mb-6 text-white">
-            Loved by <span className="text-accent">Thousands</span>
+          <h2 className="font-light text-5xl md:text-7xl tracking-tight mb-6 text-gray-900">
+            Testimonials
           </h2>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">
-            Don't just take our word for it. Hear from our satisfied customers.
-          </p>
+          <div className="w-16 h-px bg-black/20 mx-auto" />
         </motion.div>
 
         {/* Carousel */}
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative max-w-5xl mx-auto">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentIndex}
@@ -126,46 +124,21 @@ const TestimonialsCarousel = () => {
                 x: { type: "spring", stiffness: 300, damping: 30 },
                 opacity: { duration: 0.2 },
               }}
-              className="bg-white backdrop-blur-sm border border-gray-200 rounded-3xl p-8 md:p-12 shadow-xl"
+              className="pb-16 border-b border-gray-200"
             >
-              {/* Rating Stars */}
-              <div className="flex justify-center mb-6">
-                {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="text-electric-400 text-2xl"
-                  >
-                    ★
-                  </motion.span>
-                ))}
-              </div>
-
-              {/* Comment */}
-              <p className="text-xl md:text-2xl text-center text-slate-300 leading-relaxed mb-8 font-light">
+              {/* Quote */}
+              <blockquote className="font-light text-2xl md:text-3xl leading-relaxed text-gray-900 mb-12 text-center max-w-3xl mx-auto">
                 "{testimonials[currentIndex].comment}"
-              </p>
+              </blockquote>
 
               {/* Author Info */}
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-electric-400 to-electric-600 rounded-full flex items-center justify-center text-2xl mb-4">
-                  👤
+              <div className="flex flex-col items-center text-center">
+                <div className="font-light text-xl mb-2">{testimonials[currentIndex].name}</div>
+                <div className="text-zinc-600 text-xs uppercase tracking-wider mb-1">
+                  {testimonials[currentIndex].role}
                 </div>
-                <div className="text-center">
-                  <div className="font-display font-bold text-lg mb-1">
-                    {testimonials[currentIndex].name}
-                  </div>
-                  <div className="text-slate-400 text-sm mb-1">
-                    {testimonials[currentIndex].role}
-                  </div>
-                  <div className="text-slate-500 text-sm">
-                    {testimonials[currentIndex].location}
-                  </div>
-                  <div className="inline-block mt-3 px-3 py-1 bg-electric-500/10 border border-electric-500/30 rounded-full text-electric-400 text-xs">
-                    {testimonials[currentIndex].model} Owner
-                  </div>
+                <div className="text-zinc-500 text-xs">
+                  {testimonials[currentIndex].location}
                 </div>
               </div>
             </motion.div>
@@ -174,25 +147,25 @@ const TestimonialsCarousel = () => {
           {/* Navigation Arrows */}
           <button
             onClick={() => paginate(-1)}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 w-12 h-12 bg-white backdrop-blur-sm border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-50 hover:border-primary shadow-lg transition-all"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-20 w-12 h-12 border border-gray-200 hover:border-black transition-colors duration-300"
             aria-label="Previous testimonial"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button
             onClick={() => paginate(1)}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 w-12 h-12 bg-white backdrop-blur-sm border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-50 hover:border-primary shadow-lg transition-all"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-20 w-12 h-12 border border-gray-200 hover:border-black transition-colors duration-300"
             aria-label="Next testimonial"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M9 5l7 7-7 7" />
             </svg>
           </button>
 
           {/* Dots Indicator */}
-          <div className="flex justify-center space-x-2 mt-8">
+          <div className="flex justify-center space-x-3 mt-12">
             {testimonials.map((_, index) => (
               <button
                 key={index}
@@ -200,10 +173,10 @@ const TestimonialsCarousel = () => {
                   setDirection(index > currentIndex ? 1 : -1)
                   setCurrentIndex(index)
                 }}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-px rounded-full transition-all duration-300 ${
                   index === currentIndex
-                    ? 'w-8 bg-electric-400'
-                    : 'w-2 bg-gray-300 hover:bg-gray-400'
+                    ? 'w-12 bg-black'
+                    : 'w-8 bg-gray-300 hover:bg-gray-400'
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
