@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
-import LoadingScreen from './components/ui/Loading'
 
 // Lazy load pages for better performance
 const HomePage = lazy(() => import('./pages/Home'))
@@ -13,7 +12,7 @@ const FeaturesPage = lazy(() => import('./pages/FeaturesPage'))
 
 const AppRoutes = () => {
   return (
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<div />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:model" element={<ProductPage />} />

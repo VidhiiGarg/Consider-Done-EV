@@ -7,6 +7,9 @@ const ProductGallery = () => {
   const [imageLoaded, setImageLoaded] = useState<{[key: number]: boolean}>({})
   const constraintsRef = useRef(null)
 
+  // Debug selectedImage state
+  console.log('ProductGallery render - selectedImage:', selectedImage)
+
   const galleryImages = [
     { src: '/images/CD_EV15783.jpg', title: 'Aerodynamic Excellence', category: 'Design', color: 'from-blue-500/20 to-cyan-500/20' },
     { src: '/images/CD_EV15757.jpg', title: 'Intelligent Dashboard', category: 'Technology', color: 'from-purple-500/20 to-pink-500/20' },
@@ -31,6 +34,15 @@ const ProductGallery = () => {
     }
   }
 
+  // Preload all images immediately
+  useEffect(() => {
+    galleryImages.forEach((image, index) => {
+      const img = new Image()
+      img.onload = () => setImageLoaded(prev => ({ ...prev, [index]: true }))
+      img.src = image.src
+    })
+  }, [])
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedImage === null) return
@@ -40,6 +52,18 @@ const ProductGallery = () => {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedImage])
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (selectedImage !== null) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
   }, [selectedImage])
 
   return (
@@ -118,16 +142,18 @@ const ProductGallery = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ 
-                delay: index * 0.08, 
-                duration: 0.8,
+                delay: index * 0.05, 
+                duration: 0.6,
                 ease: [0.22, 1, 0.36, 1]
               }}
               className="relative group cursor-pointer"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => setSelectedImage(index)}
-              style={{
-                gridRow: index === 4 ? 'span 2' : 'span 1'
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Image clicked:', index);
+                setSelectedImage(index);
               }}
             >
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-gray-100">
@@ -154,13 +180,19 @@ const ProductGallery = () => {
                       scale: hoveredIndex === index ? 1.1 : 1,
                     }}
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    loading="lazy"
-                    onLoad={() => setImageLoaded(prev => ({ ...prev, [index]: true }))}
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
                   />
 
                   {/* Loading Skeleton */}
                   {!imageLoaded[index] && (
-                    <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse flex items-center justify-center">
+                      <svg className="w-12 h-12 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </div>
                   )}
 
                   {/* Overlay Gradient */}
@@ -305,137 +337,101 @@ const ProductGallery = () => {
       </div>
 
       {/* Premium Fullscreen Modal */}
-      <AnimatePresence>
-        {selectedImage !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 bg-black/98 backdrop-blur-2xl z-[9999] flex items-center justify-center"
+      {selectedImage !== null && (
+        <div
+          className="fixed inset-0 bg-black/98 backdrop-blur-2xl z-[99999] flex items-center justify-center"
+          onClick={() => setSelectedImage(null)}
+          style={{ zIndex: 99999 }}
+        >
+          {/* Close Button */}
+          <button
+            className="absolute top-6 right-6 p-4 bg-white/5 hover:bg-white/10 rounded-full backdrop-blur-xl transition-all duration-300 border border-white/10 z-20"
             onClick={() => setSelectedImage(null)}
           >
-            {/* Close Button */}
-            <motion.button
-              className="absolute top-6 right-6 p-4 bg-white/5 hover:bg-white/10 rounded-full backdrop-blur-xl transition-all duration-300 border border-white/10 z-20 group"
-              onClick={() => setSelectedImage(null)}
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </motion.button>
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
 
-            {/* Image Counter */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="absolute top-6 left-6 px-6 py-3 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 z-20"
-            >
-              <span className="text-white font-light text-sm tracking-wider">
-                <span className="font-medium">{selectedImage + 1}</span>
-                <span className="text-white/50 mx-2">/</span>
-                <span className="text-white/70">{galleryImages.length}</span>
-              </span>
-            </motion.div>
+          {/* Image Counter */}
+          <div className="absolute top-6 left-6 px-6 py-3 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 z-20">
+            <span className="text-white font-light text-sm tracking-wider">
+              <span className="font-medium">{selectedImage + 1}</span>
+              <span className="text-white/50 mx-2">/</span>
+              <span className="text-white/70">{galleryImages.length}</span>
+            </span>
+          </div>
 
-            {/* Navigation Buttons */}
-            <motion.button
-              className="absolute left-6 p-4 bg-white/5 hover:bg-white/10 rounded-full backdrop-blur-xl transition-all duration-300 border border-white/10 z-20 group disabled:opacity-30 disabled:cursor-not-allowed"
-              onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              whileHover={{ scale: 1.1, x: -5 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-              </svg>
-            </motion.button>
+          {/* Navigation Buttons */}
+          <button
+            className="absolute left-6 p-4 bg-white/5 hover:bg-white/10 rounded-full backdrop-blur-xl transition-all duration-300 border border-white/10 z-20"
+            onClick={(e) => { e.stopPropagation(); prevImage(); }}
+          >
+            <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
 
-            <motion.button
-              className="absolute right-6 p-4 bg-white/5 hover:bg-white/10 rounded-full backdrop-blur-xl transition-all duration-300 border border-white/10 z-20 group disabled:opacity-30 disabled:cursor-not-allowed"
-              onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              whileHover={{ scale: 1.1, x: 5 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-              </svg>
-            </motion.button>
+          <button
+            className="absolute right-6 p-4 bg-white/5 hover:bg-white/10 rounded-full backdrop-blur-xl transition-all duration-300 border border-white/10 z-20"
+            onClick={(e) => { e.stopPropagation(); nextImage(); }}
+          >
+            <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
 
-            {/* Image Container */}
-            <motion.div
-              key={selectedImage}
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-7xl max-h-[80vh] w-full px-20 relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <motion.div
-                className="relative rounded-2xl overflow-hidden"
-                drag
-                dragConstraints={constraintsRef}
-                dragElastic={0.1}
-                whileHover={{ cursor: 'grab' }}
-                whileDrag={{ cursor: 'grabbing' }}
-              >
-                <img
-                  src={galleryImages[selectedImage].src}
-                  alt={galleryImages[selectedImage].title}
-                  className="w-full h-full object-contain"
-                  style={{ maxHeight: '80vh' }}
-                />
-                
-                {/* Info Overlay */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
-                  className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/95 to-transparent p-8 rounded-b-2xl"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className={`px-4 py-1.5 bg-gradient-to-r ${galleryImages[selectedImage].color} backdrop-blur-sm border border-white/20 rounded-full`}>
-                      <span className="text-white text-xs font-medium tracking-wider uppercase">
-                        {galleryImages[selectedImage].category}
-                      </span>
-                    </div>
-                    <div className="h-1 w-1 bg-white/30 rounded-full" />
-                    <span className="text-white/60 text-sm font-light">Premium Quality</span>
+          {/* Image Container */}
+          <div
+            className="max-w-7xl max-h-[80vh] w-full px-20 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative rounded-2xl overflow-hidden">
+              <img
+                src={galleryImages[selectedImage].src}
+                alt={galleryImages[selectedImage].title}
+                className="w-full h-full object-contain"
+                style={{ maxHeight: '80vh' }}
+                loading="eager"
+                decoding="async"
+              />
+              
+              {/* Info Overlay */}
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/95 to-transparent p-8 rounded-b-2xl">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`px-4 py-1.5 bg-gradient-to-r ${galleryImages[selectedImage].color} backdrop-blur-sm border border-white/20 rounded-full`}>
+                    <span className="text-white text-xs font-medium tracking-wider uppercase">
+                      {galleryImages[selectedImage].category}
+                    </span>
                   </div>
-                  <h3 className="text-3xl md:text-4xl font-light text-white mb-2 tracking-tight">
-                    {galleryImages[selectedImage].title}
-                  </h3>
-                  <p className="text-white/60 text-sm font-light">
-                    Captured in stunning detail • Professional grade imagery
-                  </p>
-                </motion.div>
-              </motion.div>
-            </motion.div>
+                  <div className="h-1 w-1 bg-white/30 rounded-full" />
+                  <span className="text-white/60 text-sm font-light">Premium Quality</span>
+                </div>
+                <h3 className="text-3xl md:text-4xl font-light text-white mb-2 tracking-tight">
+                  {galleryImages[selectedImage].title}
+                </h3>
+                <p className="text-white/60 text-sm font-light">
+                  Captured in stunning detail • Professional grade imagery
+                </p>
+              </div>
+            </div>
+          </div>
 
-            {/* Keyboard Shortcuts */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 px-8 py-4 bg-white/5 backdrop-blur-xl rounded-full border border-white/10"
-            >
-              <div className="flex items-center gap-2.5">
-                <kbd className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-white font-mono">←</kbd>
-                <kbd className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-white font-mono">→</kbd>
-                <span className="text-white/60 text-xs font-light">Navigate</span>
-              </div>
-              <div className="w-px h-5 bg-white/10" />
-              <div className="flex items-center gap-2.5">
-                <kbd className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-white font-mono">ESC</kbd>
-                <span className="text-white/60 text-xs font-light">Close</span>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {/* Keyboard Shortcuts */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 px-8 py-4 bg-white/5 backdrop-blur-xl rounded-full border border-white/10">
+            <div className="flex items-center gap-2.5">
+              <kbd className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-white font-mono">←</kbd>
+              <kbd className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-white font-mono">→</kbd>
+              <span className="text-white/60 text-xs font-light">Navigate</span>
+            </div>
+            <div className="w-px h-5 bg-white/10" />
+            <div className="flex items-center gap-2.5">
+              <kbd className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-white font-mono">ESC</kbd>
+              <span className="text-white/60 text-xs font-light">Close</span>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
