@@ -256,7 +256,7 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
       className="relative h-screen w-full bg-white overflow-hidden mt-[72px]"
     >
       {/* Split Screen Effect */}
-      <div className="relative h-full w-full flex">
+      <div className="relative h-full w-full flex z-10">
         
         {/* Left Half - Current Image */}
         <motion.div 
@@ -331,7 +331,7 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
 
         {/* Center Split Line */}
         <motion.div 
-          className="absolute top-0 bottom-0 w-1 bg-white z-50"
+          className="absolute top-0 bottom-0 w-1 bg-white z-20"
           style={{ 
             left: `${splitPosition.get()}%`,
             boxShadow: '0 0 50px rgba(255,255,255,0.8)',
@@ -408,7 +408,7 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
 
       {/* Magnetic Cursor */}
       <motion.div
-        className="fixed w-20 h-20 border-2 border-white rounded-full pointer-events-none z-50 mix-blend-difference"
+        className="fixed w-20 h-20 border-2 border-white rounded-full pointer-events-none z-[100] mix-blend-difference"
         style={{
           x: mouseX,
           y: mouseY,
@@ -571,7 +571,7 @@ const HeroSection = ({ onBookTestRide }: HeroSectionProps) => {
       </motion.div>
 
       {/* Vignette effect */}
-      <div className="absolute inset-0 pointer-events-none z-20 bg-gradient-radial from-transparent via-transparent to-black/40" />
+      <div className="absolute inset-0 pointer-events-none z-40 bg-gradient-radial from-transparent via-transparent to-black/40" />
     </section>
   )
 }
