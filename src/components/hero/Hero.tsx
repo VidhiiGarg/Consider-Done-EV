@@ -6,38 +6,44 @@ interface HeroSectionProps {
 }
 
 const heroImages = [
-  '/images/CD_EV15783.jpg',
-  '/images/CD_EV15757.jpg',
-  '/images/CD_EV15705.jpg',
-  '/images/CD_EV15828.jpg',
-  '/images/CD_EV15834.jpg',
+  '/images/blue scooty.jpg',
+  '/images/CD ev 1.jpg',
+  '/images/CD 2.jpg',
+  '/images/CD 3.jpg',
+  '/images/CD 4.jpg',
+  '/images/ChatGPT Image Nov 27, 2025, 05_26_27 PM.png',
 ]
 
 const productInfo = [
   {
-    title: 'Urban Mobility',
-    subtitle: 'The Future of City Driving',
-    specs: ['400+ km range', '0-100 in 4.5s', 'Smart charging']
+    title: 'Blue Elegance',
+    subtitle: 'Premium Electric Scooter',
+    specs: ['150+ km range', '0-60 in 3.2s', 'Fast charging']
   },
   {
-    title: 'Performance Plus',
-    subtitle: 'Power Meets Efficiency',
-    specs: ['Dual motor AWD', '500+ HP', 'Premium interior']
+    title: 'Urban Rider',
+    subtitle: 'City Commuting Redefined',
+    specs: ['Smart connectivity', '200+ km range', 'LED lighting']
   },
   {
-    title: 'Luxury Edition',
-    subtitle: 'Redefined Elegance',
-    specs: ['Autopilot ready', 'Panoramic roof', 'Vegan leather']
+    title: 'Sport Edition',
+    subtitle: 'Performance Meets Style',
+    specs: ['High-speed mode', 'Carbon accents', 'Sport suspension']
   },
   {
-    title: 'Sport Series',
-    subtitle: 'Engineered for Thrill',
-    specs: ['Track mode', 'Carbon fiber', 'Adaptive suspension']
+    title: 'Classic Design',
+    subtitle: 'Timeless Electric Mobility',
+    specs: ['Retro styling', '180+ km range', 'Comfort seating']
   },
   {
-    title: 'Family Comfort',
-    subtitle: 'Space for Everyone',
-    specs: ['7 seats', 'Advanced safety', 'Entertainment system']
+    title: 'Advanced Model',
+    subtitle: 'Next-Gen Technology',
+    specs: ['AI assistance', '250+ km range', 'Wireless charging']
+  },
+  {
+    title: 'Future Vision',
+    subtitle: 'Tomorrow\'s Ride Today',
+    specs: ['Autonomous features', '300+ km range', 'Solar charging']
   },
 ]
 
